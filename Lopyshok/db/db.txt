@@ -1,0 +1,114 @@
+﻿CREATE TABLE AgentType (
+    id serial PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
+    image VARCHAR(100)
+);
+
+CREATE TABLE supplier (
+    id serial PRIMARY KEY,
+    title varchar(150) NOT NULL,
+    inn varchar(12) NOT NULL,
+    startDate date NOT NULL,
+    qualityRate int,
+    SupplierType varchar (20)
+);
+
+CREATE TABLE productType (
+    id serial PRIMARY KEY,
+    title varchar(50) NOT NULL,
+    defecterPercent double precision  not null
+);
+
+CREATE TABLE product (
+    id serial PRIMARY KEY,
+    title varchar(100) NOT NULL,
+    productTypeId int REFERENCES productType (id) ON DELETE CASCADE,
+    articleNumber varchar(10) not null,
+    description text,
+    image varchar (100) ,
+    productionPersonCount int,
+    productionWorkshopNumber int,
+    minCostForAgent numeric(10,2) NOT NULL
+);
+
+CREATE TABLE materialType (
+    id serial Primary key,
+    title varchar(50) NOT NULL,
+    defectedPersent double precision NOT NULL
+);
+
+CREATE TABLE material (
+    id serial PRIMARY KEY,
+    title varchar(100) NOT NULL,
+    countInPack int NOT NULL,
+    Unit varchar(10) NOT NULL,
+    countInStock double precision,
+    minCount double precision NOT NULL,
+    Description text,
+    cost money, 
+    image varchar(100),
+    materialTypeId int REFERENCES materialType(id) ON DELETE CASCADE
+);
+
+CREATE TABLE MaterialSupplier (
+    supplierId int REFERENCES supplier(id) ON DELETE CASCADE,
+    materialId int REFERENCES material(id) ON DELETE CASCADE
+);
+
+CREATE TABLE productMaterial (
+    productId int REFERENCES product(id) ON DELETE CASCADE,
+    materialId int REFERENCES material(id) ON DELETE CASCADE,
+    count double precision
+);
+
+CREATE TABLE agent (
+    id serial PRIMARY KEY,
+    title varchar(150) NOT NULL,
+    agentTypeId int REFERENCES agentType(id) ON DELETE CASCADE,
+    address varchar(300),
+    inn varchar(12) not null,
+    kpp varchar(9),
+    directorName varchar(100),
+    phone varchar(20) not null,
+    email varchar(255),
+    logo varchar(100),
+    priority int NOT NULL
+);
+
+CREATE TABLE productSale (
+    id serial PRIMARY KEY,
+    agentId int REFERENCES agent(id) ON DELETE CASCADE,
+    productId int REFERENCES product(id) ON DELETE CASCADE,
+    saleDate date NOT NULL,
+    productCount int not null
+);
+
+CREATE TABLE shop (
+    id serial PRIMARY KEY,
+    title varchar(150) NOT NULL,
+    address varchar(300),
+    agentId int REFERENCES agent(id) ON DELETE CASCADE
+);
+
+CREATE TABLE MaterialCountHistory (
+    id serial primary key,
+    materialId int REFERENCES material(id) ON DELETE CASCADE,
+    changeDate date not null,
+    countValue double precision not null
+);
+
+CREATE TABLE productCostHistory (
+    id serial primary key,
+    productId int REFERENCES product(id) ON DELETE CASCADE,
+    changeDate date NOT NULL,
+    costValue money NOT NULL
+);
+
+CREATE TABLE agentPriorityHistory (
+    id serial PRIMARY KEY,
+    agentId int REFERENCES agent(id) ON DELETE CASCADE,
+    changeDate date NOT NULL,
+    priorityValue int NOT NULL
+);
+
+
